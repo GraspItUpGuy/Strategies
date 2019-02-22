@@ -10,7 +10,16 @@ const connectEnsureLogin = require('connect-ensure-login')
 const morgan = require('morgan')
 
 
-// setting up the dependencies
+// setting up the passort-facebook starategy
+// => from the documentation
+passport.use(new FacebookStrategy({
+    clientID: "354750295125258",
+    clientSecret: "0871db3b3cbf23350d706bc4ac0374d9",
+    callbackURL: "http://localhost:3000/login/facebook/return"
+  },(accessToken, refreshToken, profile, cb) =>{
+       return cb(null, profile);
+     }
+));
 
 
 
