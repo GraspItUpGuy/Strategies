@@ -12,7 +12,7 @@ const morgan = require('morgan')
 
 // setting up the passort-facebook starategy
 // => from the documentation
-passport.use(new FacebookStrategy({
+passport.use(new Strategy({
     clientID: "354750295125258",
     clientSecret: "0871db3b3cbf23350d706bc4ac0374d9",
     callbackURL: "http://localhost:3000/login/facebook/return"
@@ -30,27 +30,39 @@ passport.serializeUser((user, cb)=> {
 // desereialize user
 passport.deserializeUser((obj, cb) =>{
     
-      cb(null, user);
+      cb(null, obj);
    
   });
 
-// view engine setup
-app.set('views', __dirname + '/views')
-app.set('view engine' , 'ejs')
+
 
 
 //app setup
 const app = express()
 const port = process.env.PORT || 3000
 
+// view engine setup
+app.set('views', __dirname + '/views')
+app.set('view engine' , 'ejs')
 
 //@route  -   GET  /home
 //@desc   -   a route to home page
 //@access -   PUBLIC
 //@source -   express npm page
-app.get('/', (req,res)=>(
-    res.send('this is the home page nibbas')
-))
+app.get('/', (req,res)=>{
+    //res.send('this is the home page nibbas')
+    res.render('home')
+})
+
+//@route  -   GET  /login
+//@desc   -   a route to home page
+//@access -   PUBLIC
+//@source -   express npm page
+app.get('/', (req,res)=>{
+   
+    res.render('login')
+})
+
 
 
 
