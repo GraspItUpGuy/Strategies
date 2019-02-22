@@ -34,6 +34,9 @@ passport.deserializeUser((obj, cb) =>{
    
   });
 
+// view engine setup
+app.set('views', __dirname + '/views')
+app.set('view engine' , 'ejs')
 
 
 //app setup
