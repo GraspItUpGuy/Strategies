@@ -21,6 +21,19 @@ passport.use(new FacebookStrategy({
      }
 ));
 
+//  serialize user
+passport.serializeUser((user, cb)=> {
+    cb(null, user);
+  });
+   
+
+// desereialize user
+passport.deserializeUser((obj, cb) =>{
+    
+      cb(null, user);
+   
+  });
+
 
 
 //app setup
