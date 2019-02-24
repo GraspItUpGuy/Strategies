@@ -2,12 +2,8 @@
 const express = require('express')
 const passport = require('passport')
 const Strategy  = require('passport-facebook').Strategy
-const bodyParser = require('body-parser')
 const ejs = require('ejs')
-const cookieParser  = require('cookie-parser')()
-const expressSession = require('express-session')
 const connectEnsureLogin = require('connect-ensure-login')
-const morgan = require('morgan')
 
 
 // setting up the passort-facebook starategy
@@ -45,25 +41,58 @@ const port = process.env.PORT || 3000
 app.set('views', __dirname + '/views')
 app.set('view engine' , 'ejs')
 
+
+// configruation -> grab them from the npm page
+app.use(require('morgan')('combined'));
+app.use(require('cookie-parser')());
+app.use(require('body-parser').urlencoded({extened: true}))
+app.use(require('express-session')({secret : 'GraspItUp App', resave : true,
+saveUninitialized  : true}));
+
+
 //@route  -   GET  /home
 //@desc   -   a route to home page
 //@access -   PUBLIC
 //@source -   express npm page
 app.get('/', (req,res)=>{
     //res.send('this is the home page nibbas')
-    res.render('home')
+    res.render('home', {user: req.user})
 })
 
 //@route  -   GET  /login
 //@desc   -   a route to home page
 //@access -   PUBLIC
 //@source -   express npm page
-app.get('/', (req,res)=>{
+app.get('/login', (req,res)=>{
    
     res.render('login')
 })
 
+//@route  -   GET  /login/facebook/
+//@desc   -   a route for facebook auth
+//@access -   PUBLIC
+//@source -   express npm page
+app.get('/auth/facebook',
+  passport.authenticate('facebook'));
 
+  //@route  -   GET  /login/facebook/callback
+//@desc   -   a route for facebook auth failure redirect
+//@access -   PUBLIC
+//@source -   express npm page
+app.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/login' }),
+  (req, res)=> {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  });
+
+//@route  -   GET  /profile
+//@desc   -   a route to profile of the user
+//@access -   PROTECTED
+//@source -   documentation -> passport-facebook on github
+app.get('/profile', require('connect-ensure-login').ensureLoggedIn(),(req,res)=>{
+    res.render('profile', {user : req.user})
+ })
 
 
 // listening the app on the server
